@@ -8,9 +8,11 @@ import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.infy.infystore.databinding.ActivityMainBinding
+import com.infy.infystore.storage.Preference
+import com.infy.infystore.utils.GlobalConstants
 
 
-class MainActivity : AppCompatActivity() {
+class PrivacyPolicyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var radioButton: RadioButton
     private var radioGroup: RadioGroup? = null
@@ -26,9 +28,15 @@ class MainActivity : AppCompatActivity() {
             val intSelectButton: Int = radioGroup!!.checkedRadioButtonId
             radioButton = findViewById(intSelectButton)
             Log.d("radio",""+intSelectButton)
-            Toast.makeText(baseContext, radioButton.text, Toast.LENGTH_SHORT).show()
 
-            startActivity(Intent(this,DashboardActivity::class.java))
+            if (radioButton.text.equals(getString(R.string.accept))) {
+                Preference.instance.setPreferenceBoolean(GlobalConstants.IS_PRIVACY_ACCEPTED,true)
+                startActivity(Intent(this,DashboardActivity::class.java))
+                finish()
+            }else{
+                Preference.instance.setPreferenceBoolean(GlobalConstants.IS_PRIVACY_ACCEPTED,false)
+                finish()
+            }
         }
     }
 }

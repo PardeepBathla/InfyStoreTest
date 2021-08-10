@@ -8,9 +8,9 @@ import com.infy.infystore.R
 
 class Utils {
     companion object{
-        val BASE_URL:String = "https://recipesapi.herokuapp.com/api/v2/"
 
-        fun setCount(context: Context?, menu: Menu?, count: String?) {
+
+        fun setCount(context: Context?, menu: Menu?, count: String) {
             val menuItem: MenuItem = menu?.findItem(R.id.action_cart)!!
             val icon = menuItem.icon as LayerDrawable
             val badge: CountDrawable

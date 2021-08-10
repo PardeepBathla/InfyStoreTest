@@ -2,6 +2,7 @@ package com.infy.infystore
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -10,10 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import com.infy.infystore.database.RoomAppDb
 import com.infy.infystore.databinding.ActivityDashboardBinding
-import com.infy.infystore.ui.home.HomeRepository
 import com.infy.infystore.ui.home.HomeViewModel
 import com.infy.infystore.utils.Utils
 
@@ -25,9 +23,6 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-
 
 
         binding = ActivityDashboardBinding.inflate(layoutInflater)
@@ -60,6 +55,13 @@ class DashboardActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.dashboard, menu)
         Utils.setCount(this,menu, "9")
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_logout){
+
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -1,28 +1,33 @@
 package com.infy.infystore.ui.Cart
 
-import android.content.Context
-import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.infy.infystore.DashboardActivity
 import com.infy.infystore.R
+import com.infy.infystore.api.ApiHelper
+import com.infy.infystore.api.RetrofitBuilder
+import com.infy.infystore.database.RoomAppDb
+import com.infy.infystore.database.entity.CartEntities
 import com.infy.infystore.databinding.FragmentCartBinding
-import com.infy.infystore.utils.CountDrawable
+import com.infy.infystore.ui.ViewModelFactory
 import com.infy.infystore.utils.Utils
 
 
 class CartFragment : Fragment() {
 
     private lateinit var cartViewModel: CartViewModel
-    private lateinit var binding:FragmentCartBinding
+    private lateinit var binding: FragmentCartBinding
     private lateinit var rv: RecyclerView
     private lateinit var myAdapter: CartAdapter
-    private val arr:Array<String>? = arrayOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J")
+    private lateinit var cartList: ArrayList<CartEntities>
+    private val arr: Array<String>? = arrayOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,18 +35,24 @@ class CartFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        cartViewModel = ViewModelProvider(this).get(CartViewModel::class.java)
+//        cartViewModel = ViewModelProvider(this).get(CartViewModel::class.java)
         binding = FragmentCartBinding.inflate(inflater, container, false)
-        setHasOptionsMenu(true);
-        rv = binding.rvCart
-        myAdapter = CartAdapter(this, arr)
-        rv.layoutManager = LinearLayoutManager(activity)
-        rv.adapter = myAdapter
+        setHasOptionsMenu(true)
+        setupViewModel()
+
+        binding.svTiles?.startShimmerAnimation()
+        binding.svTiles?.visibility = View.VISIBLE
+
+        cartList = cartViewModel.fetchProducts() as ArrayList<CartEntities>
+        Handler(Looper.myLooper()!!).postDelayed({
+            setAdapter(cartList)
+            binding.svTiles?.stopShimmerAnimation()
+            binding.svTiles?.visibility = View.GONE
+        }, 1500)
 
 
-        cartViewModel.text.observe(viewLifecycleOwner, Observer {
 
-        })
+
 
         binding.btnGoToPurchase.setOnClickListener {
             findNavController().navigate(R.id.action_cartFragment_to_purchaseFragment)
@@ -50,9 +61,24 @@ class CartFragment : Fragment() {
     }
 
 
+    private fun setupViewModel() {
+        cartViewModel = ViewModelProviders.of(this,
+            RoomAppDb.getAppDatabase(activity as DashboardActivity)?.let {
+                ViewModelFactory(ApiHelper(RetrofitBuilder.apiService), it)
+            }).get(CartViewModel::class.java)
+    }
+
+
+    private fun setAdapter(fetchProducts: ArrayList<CartEntities>?) {
+        rv = binding.rvCart
+        myAdapter = CartAdapter(activity as DashboardActivity, fetchProducts)
+        rv.layoutManager = LinearLayoutManager(activity)
+        rv.adapter = myAdapter
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        Utils.setCount(activity,menu, "0")
+        Utils.setCount(activity, menu, cartList.size.toString())
         super.onCreateOptionsMenu(menu, inflater)
 
     }

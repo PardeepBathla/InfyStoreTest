@@ -6,11 +6,10 @@ import com.google.gson.reflect.TypeToken
 import com.infy.infystore.ui.home.homeModal.ProductModal
 
 
-@Entity(tableName = "products_list")
-data class ProductItems(
+@Entity(tableName = "table_products")
+data class ProductEntities(
 
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "os") val os: String,
     @TypeConverters(RoomTypeConverters::class)
     @ColumnInfo(name = "products") val products: List<ProductModal>
 

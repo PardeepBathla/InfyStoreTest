@@ -17,6 +17,16 @@
     </fragment>
 
     <fragment
+        android:id="@+id/nav_cart"
+        android:name="com.infy.infystore.ui.Cart.CartFragment"
+        android:label="@string/menu_cart"
+        tools:layout="@layout/fragment_cart" >
+        <action
+            android:id="@+id/action_cartFragment_to_purchaseFragment"
+            app:destination="@id/purchaseFragment" />
+    </fragment>
+
+    <fragment
         android:id="@+id/nav_orders"
         android:name="com.infy.infystore.ui.orders.OrdersFragment"
         android:label="@string/menu_orders"
@@ -29,12 +39,14 @@
         tools:layout="@layout/fragment_account" />
     <fragment
         android:id="@+id/productDetailFragment"
-        android:name="com.infy.infystore.ui.home.ProductDetailFragment"
+        android:name="com.infy.infystore.ui.home.productDetail.ProductDetailFragment"
         android:label="@string/product_detail"
         tools:layout="@layout/fragment_product_detail">
         <action
-            android:id="@+id/action_productDetailFragment_to_cartFragment"
-            app:destination="@id/cartFragment" />
+            android:id="@+id/action_productDetailFragment_to_nav_cart"
+            app:destination="@id/nav_cart"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/productDetailFragment"/>
     </fragment>
     <fragment
         android:id="@+id/purchaseFragment"
@@ -48,13 +60,5 @@
             app:popUpToInclusive="true"
             app:popUpTo="@id/mobile_navigation"/>
     </fragment>
-    <fragment
-        android:id="@+id/cartFragment"
-        android:name="com.infy.infystore.ui.Cart.CartFragment"
-        android:label="@string/menu_cart"
-        tools:layout="@layout/fragment_cart" >
-        <action
-            android:id="@+id/action_cartFragment_to_purchaseFragment"
-            app:destination="@id/purchaseFragment" />
-    </fragment>
+
 </navigation>

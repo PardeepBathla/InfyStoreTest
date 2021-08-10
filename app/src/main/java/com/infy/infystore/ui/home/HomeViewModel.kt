@@ -1,31 +1,44 @@
 package com.infy.infystore.ui.home
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import com.infy.infystore.database.RoomAppDb
-import com.infy.infystore.database.entity.ProductItems
+import com.infy.infystore.database.entity.ProductEntities
+import com.infy.infystore.utils.Resource
+import kotlinx.coroutines.Dispatchers
+
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+class HomeViewModel(private val homeRepository: HomeRepository,private val roomAppDb: RoomAppDb) : ViewModel() {
 
-    private var homeRepository: HomeRepository? = null
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
-    }
-    val text: LiveData<String> = _text
+     var dbProducts:List<ProductEntities> ? = null
 
-    init {
-        homeRepository = RoomAppDb.getAppDatabase(application)?.let { HomeRepository(it) };
-
-
+    fun insert(item: ProductEntities) = GlobalScope.launch {
+        homeRepository.insert(item)
     }
 
+    fun fetchProducts(): List<ProductEntities>? {
+        GlobalScope.launch {
+            try {
+                dbProducts =  homeRepository.fetchProducts()
+            } catch (e: Exception) {
+            }
+        }
+        return dbProducts
+    }
 
-    fun insert(item: ProductItems) = GlobalScope.launch {
-        homeRepository?.insert(item)
+    fun deleteTable() = GlobalScope.launch {
+        homeRepository.deleteTable()
+    }
+
+
+    fun getProducts() = liveData(Dispatchers.IO) {
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = homeRepository.getProductsApi()))
+        } catch (exception: Exception) {
+            emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
+        }
     }
 }

@@ -1,9 +1,9 @@
 package com.infy.infystore.ui.home.homeModal
 
 data class ProductModal(
-    val id: String? = null,
-    val price: String? = null,
-    val name: String? = null,
-    val qty: String? = null,
-    val description: String? = null
+//    var id: String? = null,
+    var price: String? = "55",
+    val title: String,
+    val imageUrl: String,
+    var description: String = "Lorem Ipsum Dollar  Lorem Ipsum Dollar   Lorem Ipsum Dollar"
 )

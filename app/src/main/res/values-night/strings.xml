@@ -10,4 +10,9 @@
     <string name="submit">Submit</string>
     <string name="logout">Logout</string>
     <string name="product_detail">Product Detail</string>
+    <string name="dummy_desc">"Lorem Ipsum Dollar Lorem Ipsum Dollar Lorem Ipsum Dollar Lorem Ipsum Dollar Lorem Ipsum Dollar Lorem Ipsum Dollar Lorem Ipsum Dollar Lorem Ipsum Dollar Lorem Ipsum Dollar Lorem Ipsum Dollar Lorem Ipsum DollarvLorem Ipsum Dollar Lorem Ipsum Dollar Lorem Ipsum Dollar Lorem Ipsum Dollar Lorem Ipsum Dollar "</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="go_to_cart">Go To Cart</string>
+    <string name="add_to_cart">Add To Cart</string>
 </resources>
