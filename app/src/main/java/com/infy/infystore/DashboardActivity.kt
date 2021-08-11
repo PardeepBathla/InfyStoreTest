@@ -2,12 +2,9 @@ package com.infy.infystore
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Toast
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -15,9 +12,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
 import com.infy.infystore.api.ApiHelper
 import com.infy.infystore.api.RetrofitBuilder
 import com.infy.infystore.database.RoomAppDb
@@ -26,12 +21,11 @@ import com.infy.infystore.databinding.ActivityDashboardBinding
 import com.infy.infystore.storage.Preference
 import com.infy.infystore.ui.Cart.CartViewModel
 import com.infy.infystore.ui.ViewModelFactory
-import com.infy.infystore.ui.home.HomeViewModel
 import com.infy.infystore.utils.GlobalConstants
 import com.infy.infystore.utils.Utils
 import kotlinx.android.synthetic.main.nav_header.view.*
 
-class DashboardActivity : AppCompatActivity() {
+class DashboardActivity : BaseActivity() {
 
     private lateinit var cartViewModel: CartViewModel
     private lateinit var binding: ActivityDashboardBinding
@@ -51,12 +45,23 @@ class DashboardActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.includedLay.toolbar)
 
+        init()
 
 
+    }
 
+    override fun onSessionLogout() {
+        Log.d("session", "onSessionLogout: ")
+        super.onSessionLogout()
+        logoutUser()
+
+    }
+
+    private fun init() {
         val drawerLayout: DrawerLayout = binding.drawerLayout
-        var navView:  NavigationView = binding.navView
-        navView.getHeaderView(0).tvName.text = Preference.instance.getPreferenceString(GlobalConstants.EMAIL)
+        var navView: NavigationView = binding.navView
+        navView.getHeaderView(0).tvName.text =
+            Preference.instance.getPreferenceString(GlobalConstants.EMAIL)
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -67,8 +72,6 @@ class DashboardActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -93,19 +96,24 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_logout) {
-            val isPolicyAccepted: Boolean =
-                Preference.instance.getPreferenceBoolean(GlobalConstants.IS_PRIVACY_ACCEPTED)
-            if (!Preference.instance.getPreferenceBoolean(GlobalConstants.IS_REMEMBER_PASSWORD)) {
-                Preference.instance.clearPreferences()
-            }
-            Preference.instance.setPreferenceBoolean(GlobalConstants.IS_PRIVACY_ACCEPTED, isPolicyAccepted
-            )
-
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
+            logoutUser()
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun logoutUser() {
+        val isPolicyAccepted: Boolean =
+            Preference.instance.getPreferenceBoolean(GlobalConstants.IS_PRIVACY_ACCEPTED)
+        if (!Preference.instance.getPreferenceBoolean(GlobalConstants.IS_REMEMBER_PASSWORD)) {
+            Preference.instance.clearPreferences()
+        }
+        Preference.instance.setPreferenceBoolean(
+            GlobalConstants.IS_PRIVACY_ACCEPTED, isPolicyAccepted
+        )
+
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {

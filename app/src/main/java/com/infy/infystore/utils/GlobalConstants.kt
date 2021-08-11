@@ -5,10 +5,10 @@ interface GlobalConstants {
     companion object{
 
 
-        const val USERNAME = "user_name##"
+
         const val PASSWORD = "user_password##"
         const val IS_REMEMBER_PASSWORD = "remember_pass"
-         const val EMAIL = "email"
+         const val EMAIL = "user_email##"
          const val NAME = "name"
          const val TITLE = "title"
          const val IMAGE = "image"

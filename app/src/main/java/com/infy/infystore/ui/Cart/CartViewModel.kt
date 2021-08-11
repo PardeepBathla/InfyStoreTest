@@ -29,10 +29,9 @@ class CartViewModel(private val cartRepository: CartRepository, private val room
 
     fun fetchProducts(): List<CartEntities>? {
         try {
-            GlobalScope.launch {
                 dbCartProducts = cartRepository.fetchProducts()
                 Log.d("ff", "fetchProducts: ")
-            }
+
         } catch (e: Exception) {
         }
 

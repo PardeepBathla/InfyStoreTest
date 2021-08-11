@@ -39,14 +39,14 @@
             android:id="@+id/cbAccept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Accept"
+            android:text="@string/accept"
             tools:ignore="MissingConstraints" />
 
         <RadioButton
             android:id="@+id/cbDecline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Decline"
+            android:text="@string/decline"
             tools:ignore="MissingConstraints" />
     </RadioGroup>
 

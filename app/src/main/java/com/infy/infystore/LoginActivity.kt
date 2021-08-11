@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (Preference.instance.getPreferenceBoolean(GlobalConstants.IS_REMEMBER_PASSWORD)) {
-            binding.etUsername.setText(Preference.instance.getPreferenceString(GlobalConstants.USERNAME))
+            binding.etUsername.setText(Preference.instance.getPreferenceString(GlobalConstants.EMAIL))
             binding.etpass.setText(Preference.instance.getPreferenceString(GlobalConstants.PASSWORD))
         }
         initGoogleSignIn()
@@ -148,9 +148,9 @@ class LoginActivity : AppCompatActivity() {
         Preference.instance.setPreferenceBoolean(GlobalConstants.IS_REMEMBER_PASSWORD, isChecked)
 
         if (isChecked) {
-            Preference.instance.setPreferenceString(GlobalConstants.USERNAME, username)
             Preference.instance.setPreferenceString(GlobalConstants.PASSWORD, password)
         }
+        Preference.instance.setPreferenceString(GlobalConstants.EMAIL, username)
         Preference.instance.setPreferenceBoolean(GlobalConstants.IS_LOGIN, true)
         if (Preference.instance.getPreferenceBoolean(GlobalConstants.IS_PRIVACY_ACCEPTED)) {
             startActivity(Intent(this, DashboardActivity::class.java))

@@ -9,5 +9,5 @@ class CartRepository(private val db: RoomAppDb) {
 
     suspend fun insert(item: CartEntities) = db.getCartDao()?.insert(item)
     suspend fun deleteTable() = db.getCartDao()?.deleteTable()
-     suspend fun fetchProducts() = db.getCartDao()?.getAllProductItems()
+      fun fetchProducts() = db.getCartDao()?.getAllProductItems()
 }

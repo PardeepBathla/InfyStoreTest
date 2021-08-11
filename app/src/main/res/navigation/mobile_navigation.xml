@@ -41,7 +41,14 @@
         android:id="@+id/nav_account"
         android:name="com.infy.infystore.ui.account.AccountFragment"
         android:label="@string/menu_account"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_nav_account_to_nav_home"
+            app:destination="@id/nav_home"
+            app:launchSingleTop="true"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/mobile_navigation"/>
+    </fragment>
     <fragment
         android:id="@+id/productDetailFragment"
         android:name="com.infy.infystore.ui.home.productDetail.ProductDetailFragment"

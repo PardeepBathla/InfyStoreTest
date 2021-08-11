@@ -39,32 +39,39 @@ class CartFragment : Fragment() {
         binding = FragmentCartBinding.inflate(inflater, container, false)
 
         setupViewModel()
-
         binding.shimmerTiles?.startShimmerAnimation()
         binding.shimmerTiles?.visibility = View.VISIBLE
+        init()
+
+
+
+        clickListners()
+        return binding.root
+    }
+
+    private fun clickListners() {
+        binding.btnGoToPurchase.setOnClickListener {
+            cartViewModel.deleteCart()
+            init()
+            findNavController().navigate(R.id.action_cartFragment_to_purchaseFragment)
+        }
+    }
+
+    private fun init() {
+
 
         cartList = cartViewModel.fetchProducts()?.let { it as ArrayList<CartEntities> }
 
         Handler(Looper.myLooper()!!).postDelayed({
-            if (cartList!=null) {
+            if (cartList != null && cartList!!.size>0) {
                 dataFound()
-            }else{
+            } else {
                 dataNotFound()
             }
             setHasOptionsMenu(true)
             binding.shimmerTiles?.stopShimmerAnimation()
             binding.shimmerTiles?.visibility = View.GONE
         }, 1500)
-
-
-
-
-
-        binding.btnGoToPurchase.setOnClickListener {
-            cartViewModel.deleteCart()
-            findNavController().navigate(R.id.action_cartFragment_to_purchaseFragment)
-        }
-        return binding.root
     }
 
     private fun dataNotFound() {
@@ -90,15 +97,18 @@ class CartFragment : Fragment() {
 
 
     private fun setAdapter(fetchProducts: ArrayList<CartEntities>?) {
-        rv = binding.rvCart
-        myAdapter = CartAdapter(activity as DashboardActivity, fetchProducts)
-        rv.layoutManager = LinearLayoutManager(activity)
-        rv.adapter = myAdapter
+        try {
+            rv = binding.rvCart
+            myAdapter = CartAdapter(activity as DashboardActivity, fetchProducts)
+            rv.layoutManager = LinearLayoutManager(activity)
+            rv.adapter = myAdapter
+        } catch (e: Exception) {
+        }
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (this.cartList !=null && cartList!!.size!! >0) {
+        if (this.cartList != null && cartList!!.size!! > 0) {
             Utils.setCount(activity, menu, cartList?.size.toString())
         }
         super.onCreateOptionsMenu(menu, inflater)
