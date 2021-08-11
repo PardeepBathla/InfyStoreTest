@@ -13,7 +13,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CartViewModel(private val cartRepository: CartRepository, private val roomAppDb: RoomAppDb) : ViewModel() {
+class CartViewModel(private val cartRepository: CartRepository, private val roomAppDb: RoomAppDb) :
+    ViewModel() {
 
     private var dbCartProducts: List<CartEntities>? = null
 
@@ -21,14 +22,19 @@ class CartViewModel(private val cartRepository: CartRepository, private val room
         cartRepository.insert(item)
     }
 
+    fun deleteCart() = GlobalScope.launch {
+        cartRepository.deleteTable()
+    }
+
 
     fun fetchProducts(): List<CartEntities>? {
-
-            try {
-              dbCartProducts = cartRepository.fetchProducts()
+        try {
+            GlobalScope.launch {
+                dbCartProducts = cartRepository.fetchProducts()
                 Log.d("ff", "fetchProducts: ")
-            } catch (e: Exception) {
             }
+        } catch (e: Exception) {
+        }
 
         return dbCartProducts
     }

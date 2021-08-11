@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "964189410269",
+    "project_id": "infystore-fc3ec",
+    "storage_bucket": "infystore-fc3ec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:964189410269:android:51bca4baa406bf58c8dc34",
+        "android_client_info": {
+          "package_name": "com.infy.infystore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "964189410269-glauo0gdjvfsdvbu980ulo3bi3s78i82.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.infy.infystore",
+            "certificate_hash": "e9dd6ae362e1c09302d7169b73171dd750446c1c"
+          }
+        },
+        {
+          "client_id": "964189410269-jsshiasp7op67sl54nt7kmq3muhk3sta.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPudDUNxh_g4_yaKn2XlLxF4aqjmqpujE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "964189410269-jsshiasp7op67sl54nt7kmq3muhk3sta.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

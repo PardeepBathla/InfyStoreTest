@@ -18,6 +18,7 @@ import com.infy.infystore.database.entity.CartEntities
 import com.infy.infystore.databinding.FragmentCartBinding
 import com.infy.infystore.ui.ViewModelFactory
 import com.infy.infystore.utils.Utils
+import kotlinx.android.synthetic.main.fragment_cart.*
 
 
 class CartFragment : Fragment() {
@@ -26,8 +27,7 @@ class CartFragment : Fragment() {
     private lateinit var binding: FragmentCartBinding
     private lateinit var rv: RecyclerView
     private lateinit var myAdapter: CartAdapter
-    private lateinit var cartList: ArrayList<CartEntities>
-    private val arr: Array<String>? = arrayOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J")
+    private var cartList: ArrayList<CartEntities>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,17 +37,23 @@ class CartFragment : Fragment() {
 
 //        cartViewModel = ViewModelProvider(this).get(CartViewModel::class.java)
         binding = FragmentCartBinding.inflate(inflater, container, false)
-        setHasOptionsMenu(true)
+
         setupViewModel()
 
-        binding.svTiles?.startShimmerAnimation()
-        binding.svTiles?.visibility = View.VISIBLE
+        binding.shimmerTiles?.startShimmerAnimation()
+        binding.shimmerTiles?.visibility = View.VISIBLE
 
-        cartList = cartViewModel.fetchProducts() as ArrayList<CartEntities>
+        cartList = cartViewModel.fetchProducts()?.let { it as ArrayList<CartEntities> }
+
         Handler(Looper.myLooper()!!).postDelayed({
-            setAdapter(cartList)
-            binding.svTiles?.stopShimmerAnimation()
-            binding.svTiles?.visibility = View.GONE
+            if (cartList!=null) {
+                dataFound()
+            }else{
+                dataNotFound()
+            }
+            setHasOptionsMenu(true)
+            binding.shimmerTiles?.stopShimmerAnimation()
+            binding.shimmerTiles?.visibility = View.GONE
         }, 1500)
 
 
@@ -55,9 +61,23 @@ class CartFragment : Fragment() {
 
 
         binding.btnGoToPurchase.setOnClickListener {
+            cartViewModel.deleteCart()
             findNavController().navigate(R.id.action_cartFragment_to_purchaseFragment)
         }
         return binding.root
+    }
+
+    private fun dataNotFound() {
+        binding.tvvNoData?.visibility = View.VISIBLE
+        binding.btnGoToPurchase.visibility = View.GONE
+        binding.rvCart.visibility = View.GONE
+    }
+
+    private fun dataFound() {
+        setAdapter(cartList)
+        binding.tvvNoData?.visibility = View.GONE
+        binding.btnGoToPurchase.visibility = View.VISIBLE
+        binding.rvCart.visibility = View.VISIBLE
     }
 
 
@@ -78,16 +98,12 @@ class CartFragment : Fragment() {
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        Utils.setCount(activity, menu, cartList.size.toString())
+        if (this.cartList !=null && cartList!!.size!! >0) {
+            Utils.setCount(activity, menu, cartList?.size.toString())
+        }
         super.onCreateOptionsMenu(menu, inflater)
 
     }
-
-//    override fun onPrepareOptionsMenu(menu: Menu) {
-//        setCount(activity,menu, "9")
-//        super.onPrepareOptionsMenu(menu)
-//
-//    }
 
 
 }

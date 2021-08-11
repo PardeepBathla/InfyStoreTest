@@ -1,5 +1,6 @@
 package com.infy.infystore.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.infy.infystore.database.RoomAppDb
@@ -19,12 +20,12 @@ class HomeViewModel(private val homeRepository: HomeRepository,private val roomA
     }
 
     fun fetchProducts(): List<ProductEntities>? {
-        GlobalScope.launch {
             try {
                 dbProducts =  homeRepository.fetchProducts()
+                Log.d("ff", "fetchProducts: ")
             } catch (e: Exception) {
             }
-        }
+
         return dbProducts
     }
 

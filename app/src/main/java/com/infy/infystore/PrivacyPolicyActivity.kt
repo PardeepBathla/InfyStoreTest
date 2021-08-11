@@ -3,6 +3,7 @@ package com.infy.infystore
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Window
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
@@ -18,7 +19,8 @@ class PrivacyPolicyActivity : AppCompatActivity() {
     private var radioGroup: RadioGroup? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
+        this.supportActionBar!!.hide(); //hide the title bar
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

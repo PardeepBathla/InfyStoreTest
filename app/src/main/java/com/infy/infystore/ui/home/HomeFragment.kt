@@ -1,9 +1,9 @@
 package com.infy.infystore.ui.home
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -29,7 +29,6 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var rv: RecyclerView
     private lateinit var myAdapter: HomeAdapter
-    private val arr: Array<String> = arrayOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J")
 
 
     override fun onCreateView(
@@ -39,43 +38,58 @@ class HomeFragment : Fragment() {
     ): View? {
 
         Log.d("hh", "onCreateView: ")
-
-//        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         setupViewModel()
-//        insertStaticDataInDb()
         setList()
         clickListeners()
-        setupObservers()
+//        deleteDb()
+
+        checkInternet()
 
         return binding.root
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
+    private fun checkInternet() {
+        if (!com.infy.infystore.utils.Utils.checkInternetConnectivity(activity)) {
+            com.infy.infystore.utils.Utils.showAlertDialog(activity)
+            homeViewModel.fetchProducts()?.let {
+                if (it.isNotEmpty()) {
+                    dataFound()
+                    Log.d("checkInternet: ", it[0].toString())
+                    retrieveList(it[0].products)
+                } else {
+                    noDataFound()
+                }
+            }
 
-        Log.d("hh", "onAttach: ")
+        } else {
+            setupObservers()
+        }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private fun dataFound() {
+        binding.tvvNoData?.visibility = View.GONE
+        binding.rvHome.visibility = View.VISIBLE
+        binding.shimmerTiles?.stopShimmerAnimation()
+        binding.shimmerTiles?.visibility = View.GONE
 
-
-
-        Log.d("hh", "onCreate: ")
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d("hh", "onStart: ")
+    private fun noDataFound() {
+        binding.tvvNoData?.visibility = View.VISIBLE
+        binding.rvHome.visibility = View.GONE
+        binding.shimmerTiles?.stopShimmerAnimation()
+        binding.shimmerTiles?.visibility = View.GONE
+
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun deleteDb() {
+        val dbList: List<ProductEntities>? = homeViewModel.fetchProducts()
+        if (dbList != null && dbList.isNotEmpty()) {
+            homeViewModel.deleteTable()
+        }
 
-        Log.d("hh", "onResume: ")
     }
 
     private fun setupViewModel() {
@@ -86,22 +100,14 @@ class HomeFragment : Fragment() {
     }
 
 
+
+
     private fun setupObservers() {
-        val dbList: List<ProductEntities>? = homeViewModel.fetchProducts()
-        /*if (dbList != null && dbList.isNotEmpty()) {
-            retrieveList(dbList)
-        }*/
         homeViewModel.getProducts().observe(activity as DashboardActivity, Observer {
             it.let { resource ->
                 when (resource.status) {
                     SUCCESS -> {
-                        binding.rvHome.visibility = View.VISIBLE
-                        binding.svTiles?.stopShimmerAnimation()
-                        binding.svTiles?.visibility = View.GONE
-
-                        if (dbList != null && dbList.isNotEmpty()) {
-                            homeViewModel.deleteTable()
-                        }
+                        dataFound()
                         val list: ArrayList<ProductModal> = ArrayList()
                         resource.data?.let { products ->
                             addListToDB(list, products)
@@ -109,14 +115,13 @@ class HomeFragment : Fragment() {
                         }
                     }
                     ERROR -> {
-                        binding.svTiles?.stopShimmerAnimation()
-                        binding.svTiles?.visibility = View.GONE
-                        binding.rvHome.visibility = View.VISIBLE
+
+                        noDataFound()
 
                     }
                     LOADING -> {
-                        binding.svTiles?.startShimmerAnimation()
-                        binding.svTiles?.visibility = View.VISIBLE
+                        binding.shimmerTiles?.startShimmerAnimation()
+                        binding.shimmerTiles?.visibility = View.VISIBLE
                         binding.rvHome.visibility = View.GONE
                     }
                 }
@@ -134,31 +139,6 @@ class HomeFragment : Fragment() {
         homeViewModel.insert(item)
     }
 
-
-    /*private fun insertStaticDataInDb() {
-        homeViewModel.deleteTable()
-        var modal: ProductModal =
-            ProductModal("1", "150", "coke", "14", "Coke coke coke coke")
-        var modal1: ProductModal =
-            ProductModal("2", "160", "coke1", "14", "coke1 coke1 coke1 coke1")
-        var modal2: ProductModal =
-            ProductModal("3", "170", "coke2", "14", "coke2 coke2 coke2 coke2")
-        var modal3: ProductModal =
-            ProductModal("4", "180", "coke3", "14", "coke3 coke3 coke3 coke3")
-        var modal4: ProductModal =
-            ProductModal("5", "190", "coke4", "14", "coke4 coke4 coke4 coke4")
-
-        val list: ArrayList<ProductModal> = ArrayList()
-        list.add(modal)
-        list.add(modal1)
-        list.add(modal2)
-        list.add(modal3)
-        list.add(modal4)
-        val item: ProductItems = ProductItems(0, "erwwe", list)
-        homeViewModel.insert(item)
-        //        db.getProductsDao().insert(item)
-    }*/
-
     private fun retrieveList(categories: List<ProductModal>) {
         myAdapter.apply {
             addUsers(categories)
@@ -168,10 +148,8 @@ class HomeFragment : Fragment() {
 
 
     private fun clickListeners() {
-
-
         binding.swipeToRefresh?.setOnRefreshListener {
-            setupObservers()
+            checkInternet()
             binding.swipeToRefresh?.isRefreshing = false
 
         }
@@ -182,5 +160,9 @@ class HomeFragment : Fragment() {
         myAdapter = HomeAdapter(activity as DashboardActivity, ArrayList())
         rv.layoutManager = LinearLayoutManager(activity)
         rv.adapter = myAdapter
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
     }
 }

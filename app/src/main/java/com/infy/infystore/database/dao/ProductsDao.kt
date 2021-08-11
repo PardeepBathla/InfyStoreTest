@@ -12,5 +12,5 @@ interface ProductsDao {
     suspend fun deleteTable()
 
     @Query("SELECT * FROM table_products")
-    suspend fun getAllProductItems(): List<ProductEntities>
+     fun getAllProductItems(): List<ProductEntities>
 }

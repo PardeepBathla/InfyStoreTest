@@ -99,7 +99,7 @@ class HomeAdapter(
                         return false
                     }
                 })
-//                .placeholder(R.drawable.infy_logo)
+                .placeholder(R.drawable.infy_logo)
                 .fallback(R.drawable.infy_logo)
                 .into(itemListBinding.ivProduct)
         }

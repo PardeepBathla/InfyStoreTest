@@ -55,8 +55,7 @@ class Preference {
     }
 
     fun getPreferenceBoolean(key: String?): Boolean {
-        val pref: SharedPreferences =
-            InfyStoreApplication.getInstance()!!.getSharedPreferences(PREFERENCE_KEY, 0)
+        val pref: SharedPreferences = InfyStoreApplication.getInstance()!!.getSharedPreferences(PREFERENCE_KEY, 0)
         return pref.getBoolean(key, false)
     }
 

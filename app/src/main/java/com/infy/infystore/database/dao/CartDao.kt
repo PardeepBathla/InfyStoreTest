@@ -17,5 +17,5 @@ interface CartDao {
     suspend fun deleteTable()
 
     @Query("SELECT * FROM table_cart")
-     fun getAllProductItems(): List<CartEntities>
+     suspend  fun getAllProductItems(): List<CartEntities>
 }

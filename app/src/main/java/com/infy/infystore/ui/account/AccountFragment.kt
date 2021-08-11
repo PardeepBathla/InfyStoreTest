@@ -7,12 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.infy.infystore.R
+import com.infy.infystore.databinding.FragmentAccountBinding
+import com.infy.infystore.databinding.FragmentCartBinding
+import com.infy.infystore.storage.Preference
+import com.infy.infystore.utils.GlobalConstants
 
 class AccountFragment : Fragment() {
+    private lateinit var binding: FragmentAccountBinding
 
-    companion object {
-        fun newInstance() = AccountFragment()
-    }
 
     private lateinit var viewModel: AccountViewModel
 
@@ -20,7 +22,17 @@ class AccountFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.account_fragment, container, false)
+        binding = FragmentAccountBinding.inflate(inflater, container, false)
+        setHasOptionsMenu(true)
+
+        binding.etName?.setText(Preference.instance.getPreferenceString(GlobalConstants.NAME))
+        binding.etEmail?.setText(Preference.instance.getPreferenceString(GlobalConstants.EMAIL))
+
+        binding.btnUpdate?.setOnClickListener{
+
+
+        }
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

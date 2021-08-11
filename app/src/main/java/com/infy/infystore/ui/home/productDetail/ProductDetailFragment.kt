@@ -57,6 +57,7 @@ class ProductDetailFragment : Fragment() {
                 val item = CartEntities(name!!, price!!, descp!!, image!!)
                 cartViewModel.insert(item)
                 binding.btnAddToCart.text = getString(R.string.go_to_cart)
+                setHasOptionsMenu(true)//to refresh  toolbar
             } else {
                 findNavController().navigate(R.id.action_productDetailFragment_to_nav_cart)
             }

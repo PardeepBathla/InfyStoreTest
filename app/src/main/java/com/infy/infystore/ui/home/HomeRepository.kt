@@ -8,7 +8,7 @@ import com.infy.infystore.database.entity.ProductEntities
 class HomeRepository (private val db: RoomAppDb,private val apiHelper: ApiHelper){
     suspend fun insert(item: ProductEntities) = db.getProductDao()?.insert(item)
     suspend fun deleteTable() = db.getProductDao()?.deleteTable()
-     suspend fun fetchProducts() = db.getProductDao()?.getAllProductItems()
+      fun fetchProducts() = db.getProductDao()?.getAllProductItems()
 
     suspend fun getProductsApi() = apiHelper.getProducts()
 
