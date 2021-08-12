@@ -12,21 +12,28 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.infy.infystore.DashboardActivity
 import com.infy.infystore.R
 import com.infy.infystore.database.entity.CartEntities
-import com.infy.infystore.databinding.ItemListHomeBinding
+import com.infy.infystore.databinding.ItemCartBinding
 
-class CartAdapter(private val context: Context, private var arr: ArrayList<CartEntities>?) :
+class CartAdapter(
+    private val context: Context,
+    private var arr: ArrayList<CartEntities>?,
+    private val cartViewModel: CartViewModel,
+    private val cartFragment: CartFragment
+) :
     RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
-        val binding = ItemListHomeBinding.inflate(LayoutInflater.from(context), parent, false)
-        return CartViewHolder(binding.root,binding)
+        val binding = ItemCartBinding.inflate(LayoutInflater.from(context), parent, false)
+        return CartViewHolder(binding.root,binding,cartViewModel)
     }
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
 
-        holder.bindData(arr,position,context);
+        holder.bindData(arr,position,context,this,cartFragment);
+
     }
 
     override fun getItemCount(): Int {
@@ -34,14 +41,36 @@ class CartAdapter(private val context: Context, private var arr: ArrayList<CartE
     }
 
 
-    public class CartViewHolder(itemView: View, binding: ItemListHomeBinding) : RecyclerView.ViewHolder(itemView) {
+    public class CartViewHolder(
+        itemView: View,
+        binding: ItemCartBinding,
+        private val cartViewModel: CartViewModel
+    ) : RecyclerView.ViewHolder(itemView) {
         private var itemListBinding = binding
-        fun bindData(arr: ArrayList<CartEntities>?, position: Int, context: Context) {
+        fun bindData(
+            arr: ArrayList<CartEntities>?,
+            position: Int,
+            context: Context,
+            cartAdapter: CartAdapter,
+            cartFragment: CartFragment
+        ) {
 
             val pm: CartEntities? = arr?.get(position)
             itemListBinding.tvTitle.text = arr?.get(position)?.itemName
             itemListBinding.tvPrice.text = "$"+pm?.itemPrice
 
+            itemListBinding.ivDelete.setOnClickListener{
+                pm?.itemName?.let { it1 -> cartViewModel.deleteCartItem(it1)
+                    arr.remove(pm)
+                    if (arr.size==0){
+                        cartFragment.noData()
+                    }
+                }
+
+
+                (cartFragment.activity as DashboardActivity).invalidateOptionsMenu()
+                cartAdapter.notifyItemRemoved(position)
+            }
 
             Glide.with(context)
                 .load(arr?.get(position)?.itemImage)

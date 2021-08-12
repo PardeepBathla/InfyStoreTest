@@ -1,17 +1,13 @@
 package com.infy.infystore.ui.Cart
 
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.infy.infystore.database.RoomAppDb
 import com.infy.infystore.database.entity.CartEntities
-import com.infy.infystore.database.entity.ProductEntities
-import com.infy.infystore.ui.home.HomeRepository
+import com.infy.infystore.storage.Preference
+import com.infy.infystore.utils.GlobalConstants
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class CartViewModel(private val cartRepository: CartRepository, private val roomAppDb: RoomAppDb) :
     ViewModel() {
@@ -26,10 +22,14 @@ class CartViewModel(private val cartRepository: CartRepository, private val room
         cartRepository.deleteTable()
     }
 
+    fun deleteCartItem(itemName: String) = GlobalScope.launch {
+        cartRepository.deleteCartItem(itemName)
+    }
+
 
     fun fetchProducts(): List<CartEntities>? {
         try {
-                dbCartProducts = cartRepository.fetchProducts()
+                dbCartProducts = cartRepository.fetchProducts(Preference.instance.getPreferenceString(GlobalConstants.EMAIL))
                 Log.d("ff", "fetchProducts: ")
 
         } catch (e: Exception) {

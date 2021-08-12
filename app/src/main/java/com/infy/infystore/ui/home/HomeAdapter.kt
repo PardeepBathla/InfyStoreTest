@@ -17,14 +17,16 @@ import com.bumptech.glide.request.RequestListener
 import com.infy.infystore.R
 
 import com.bumptech.glide.request.target.Target
+import com.infy.infystore.databinding.FragmentCartBinding
 import com.infy.infystore.databinding.ItemListHomeBinding
+import com.infy.infystore.ui.Cart.CartFragment
 import com.infy.infystore.ui.home.homeModal.ProductModal
 import com.infy.infystore.utils.GlobalConstants
 
 
 class HomeAdapter(
     private val context: Context,
-    private var arr: ArrayList<ProductModal>?
+    private var arr: ArrayList<ProductModal>?,
 ) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
 
 
@@ -42,7 +44,7 @@ class HomeAdapter(
         return arr?.size ?: 0
     }
 
-    fun addUsers(users: List<ProductModal>) {
+    fun addUsers(users: List<ProductModal>, homeViewModel1: HomeViewModel) {
         this.arr?.apply {
             clear()
             addAll(users)
@@ -65,6 +67,7 @@ class HomeAdapter(
                     this.putString(GlobalConstants.TITLE, pm?.title)
                     this.putString(GlobalConstants.DESCP, pm?.description)
                     this.putString(GlobalConstants.PRICE, pm?.price)
+                    this.putString(GlobalConstants.IMAGE, pm?.imageUrl)
                     this.putString(GlobalConstants.IMAGE, pm?.imageUrl)
                 }
 

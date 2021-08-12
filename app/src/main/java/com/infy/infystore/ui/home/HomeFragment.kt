@@ -31,6 +31,10 @@ class HomeFragment : Fragment() {
     private lateinit var myAdapter: HomeAdapter
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupViewModel()
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,7 +44,7 @@ class HomeFragment : Fragment() {
         Log.d("hh", "onCreateView: ")
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        setupViewModel()
+
         setList()
         clickListeners()
 //        deleteDb()
@@ -64,6 +68,7 @@ class HomeFragment : Fragment() {
             }
 
         } else {
+            homeViewModel.deleteTable()
             setupObservers()
         }
     }
@@ -120,8 +125,8 @@ class HomeFragment : Fragment() {
 
                     }
                     LOADING -> {
-                        binding.shimmerTiles?.startShimmerAnimation()
-                        binding.shimmerTiles?.visibility = View.VISIBLE
+                        binding.shimmerTiles.startShimmerAnimation()
+                        binding.shimmerTiles.visibility = View.VISIBLE
                         binding.rvHome.visibility = View.GONE
                     }
                 }
@@ -131,7 +136,7 @@ class HomeFragment : Fragment() {
 
     private fun addListToDB(list: ArrayList<ProductModal>, products: DummyProduct) {
         for (product in products.categories) {
-            product.description = getString(R.string.dummy_desc)
+            product.description = getString(R.string.privacy_policy)
             product.price = "45"
             list.add(product)
         }
@@ -141,7 +146,7 @@ class HomeFragment : Fragment() {
 
     private fun retrieveList(categories: List<ProductModal>) {
         myAdapter.apply {
-            addUsers(categories)
+            addUsers(categories,homeViewModel)
             notifyDataSetChanged()
         }
     }

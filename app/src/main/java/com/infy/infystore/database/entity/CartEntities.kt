@@ -11,6 +11,7 @@ data class CartEntities(
     @ColumnInfo(name = "productPrice") var itemPrice: String,
     @ColumnInfo(name = "productDesc") var itemDescp: String,
     @ColumnInfo(name = "productImage") var itemImage: String,
+    @ColumnInfo(name = "email") var email: String,
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null

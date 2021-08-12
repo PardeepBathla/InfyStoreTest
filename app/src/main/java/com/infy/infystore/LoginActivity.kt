@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.view.Window
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -28,6 +30,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private val username: String = "xyz@infosys.com"
     private val password: String = "12345678"
+    private lateinit var animCLick : Animation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +38,8 @@ class LoginActivity : AppCompatActivity() {
         this.supportActionBar!!.hide(); //hide the title bar
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+       animCLick =  AnimationUtils.loadAnimation(this,R.anim.click_anim)
 
         if (Preference.instance.getPreferenceBoolean(GlobalConstants.IS_REMEMBER_PASSWORD)) {
             binding.etUsername.setText(Preference.instance.getPreferenceString(GlobalConstants.EMAIL))
@@ -53,6 +58,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun clickListner() {
         binding.ivGoogle?.setOnClickListener { view: View? ->
+            binding.ivGoogle.startAnimation(animCLick)
             signInGoogle()
         }
 
@@ -139,13 +145,17 @@ class LoginActivity : AppCompatActivity() {
 
     private fun googleLoginSuccess() {
         Preference.instance.setPreferenceBoolean(GlobalConstants.IS_LOGIN, true)
+        Preference.instance.setPreferenceBoolean(GlobalConstants.IS_REMEMBER_PASSWORD, false)
+        Preference.instance.setPreferenceBoolean(GlobalConstants.IS_SOCIAL_LOGIN, true)
         startActivity(Intent(this, PrivacyPolicyActivity::class.java))
         finish()
     }
 
     private fun loginSuccess(username: String, password: String, isChecked: Boolean) {
 
+        Preference.instance.setPreferenceBoolean(GlobalConstants.IS_SOCIAL_LOGIN, false)
         Preference.instance.setPreferenceBoolean(GlobalConstants.IS_REMEMBER_PASSWORD, isChecked)
+        Preference.instance.setPreferenceBoolean(GlobalConstants.IS_SOCIAL_LOGIN, false)
 
         if (isChecked) {
             Preference.instance.setPreferenceString(GlobalConstants.PASSWORD, password)

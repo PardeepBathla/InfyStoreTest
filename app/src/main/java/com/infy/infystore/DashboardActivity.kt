@@ -5,14 +5,16 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import com.google.android.material.navigation.NavigationView
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.material.navigation.NavigationView
 import com.infy.infystore.api.ApiHelper
 import com.infy.infystore.api.RetrofitBuilder
 import com.infy.infystore.database.RoomAppDb
@@ -24,6 +26,7 @@ import com.infy.infystore.ui.ViewModelFactory
 import com.infy.infystore.utils.GlobalConstants
 import com.infy.infystore.utils.Utils
 import kotlinx.android.synthetic.main.nav_header.view.*
+
 
 class DashboardActivity : BaseActivity() {
 
@@ -108,6 +111,19 @@ class DashboardActivity : BaseActivity() {
         if (!Preference.instance.getPreferenceBoolean(GlobalConstants.IS_REMEMBER_PASSWORD)) {
             Preference.instance.clearPreferences()
         }
+
+
+
+        if (Preference.instance.getPreferenceBoolean(GlobalConstants.IS_SOCIAL_LOGIN)) {
+            Preference.instance.clearPreferences()
+
+            val gso: GoogleSignInOptions =
+                GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+
+            val googleSignInClient = GoogleSignIn.getClient(this, gso)
+            googleSignInClient.signOut()
+        }
+
         Preference.instance.setPreferenceBoolean(
             GlobalConstants.IS_PRIVACY_ACCEPTED, isPolicyAccepted
         )

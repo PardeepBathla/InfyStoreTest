@@ -42,4 +42,8 @@ class HomeViewModel(private val homeRepository: HomeRepository,private val roomA
             emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
         }
     }
+
+    fun updateTable() {
+
+    }
 }

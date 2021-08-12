@@ -18,7 +18,6 @@ import com.infy.infystore.database.entity.CartEntities
 import com.infy.infystore.databinding.FragmentCartBinding
 import com.infy.infystore.ui.ViewModelFactory
 import com.infy.infystore.utils.Utils
-import kotlinx.android.synthetic.main.fragment_cart.*
 
 
 class CartFragment : Fragment() {
@@ -28,6 +27,11 @@ class CartFragment : Fragment() {
     private lateinit var rv: RecyclerView
     private lateinit var myAdapter: CartAdapter
     private var cartList: ArrayList<CartEntities>? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,6 +53,7 @@ class CartFragment : Fragment() {
         return binding.root
     }
 
+
     private fun clickListners() {
         binding.btnGoToPurchase.setOnClickListener {
             cartViewModel.deleteCart()
@@ -58,31 +63,30 @@ class CartFragment : Fragment() {
     }
 
     private fun init() {
-
-
         cartList = cartViewModel.fetchProducts()?.let { it as ArrayList<CartEntities> }
 
         Handler(Looper.myLooper()!!).postDelayed({
-            if (cartList != null && cartList!!.size>0) {
+            if (cartList != null && cartList!!.size > 0) {
                 dataFound()
             } else {
                 dataNotFound()
             }
             setHasOptionsMenu(true)
-            binding.shimmerTiles?.stopShimmerAnimation()
-            binding.shimmerTiles?.visibility = View.GONE
-        }, 1500)
+            binding.shimmerTiles.stopShimmerAnimation()
+            binding.shimmerTiles.visibility = View.GONE
+        }, 100)
     }
 
     private fun dataNotFound() {
-        binding.tvvNoData?.visibility = View.VISIBLE
+        binding.tvvNoData.visibility = View.VISIBLE
         binding.btnGoToPurchase.visibility = View.GONE
         binding.rvCart.visibility = View.GONE
     }
 
     private fun dataFound() {
+
         setAdapter(cartList)
-        binding.tvvNoData?.visibility = View.GONE
+        binding.tvvNoData.visibility = View.GONE
         binding.btnGoToPurchase.visibility = View.VISIBLE
         binding.rvCart.visibility = View.VISIBLE
     }
@@ -97,9 +101,11 @@ class CartFragment : Fragment() {
 
 
     private fun setAdapter(fetchProducts: ArrayList<CartEntities>?) {
+
         try {
             rv = binding.rvCart
-            myAdapter = CartAdapter(activity as DashboardActivity, fetchProducts)
+            myAdapter =
+                CartAdapter(activity as DashboardActivity, fetchProducts, cartViewModel, this)
             rv.layoutManager = LinearLayoutManager(activity)
             rv.adapter = myAdapter
         } catch (e: Exception) {
@@ -113,6 +119,10 @@ class CartFragment : Fragment() {
         }
         super.onCreateOptionsMenu(menu, inflater)
 
+    }
+
+    fun noData() {
+        dataNotFound()
     }
 
 
