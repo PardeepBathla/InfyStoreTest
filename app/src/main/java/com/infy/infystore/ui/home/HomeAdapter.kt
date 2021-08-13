@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -73,6 +74,7 @@ class HomeAdapter(
 
 
              it.findNavController().navigate(R.id.action_nav_home_to_productDetailFragment,bundle)
+
 
             }
             Glide.with(context)

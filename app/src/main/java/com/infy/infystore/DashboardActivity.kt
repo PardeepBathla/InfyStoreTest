@@ -14,6 +14,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
 import com.infy.infystore.api.ApiHelper
 import com.infy.infystore.api.RetrofitBuilder
@@ -108,9 +109,7 @@ class DashboardActivity : BaseActivity() {
     private fun logoutUser() {
         val isPolicyAccepted: Boolean =
             Preference.instance.getPreferenceBoolean(GlobalConstants.IS_PRIVACY_ACCEPTED)
-        if (!Preference.instance.getPreferenceBoolean(GlobalConstants.IS_REMEMBER_PASSWORD)) {
-            Preference.instance.clearPreferences()
-        }
+
 
 
 
@@ -122,10 +121,29 @@ class DashboardActivity : BaseActivity() {
 
             val googleSignInClient = GoogleSignIn.getClient(this, gso)
             googleSignInClient.signOut()
+                .addOnCompleteListener(this, OnCompleteListener<Void?> {
+
+                    redirectToLogin(isPolicyAccepted)
+                })
+        } else {
+            if (!Preference.instance.getPreferenceBoolean(GlobalConstants.IS_REMEMBER_PASSWORD)) {
+                Preference.instance.clearPreferences()
+            }
+
+            redirectToLogin(isPolicyAccepted)
         }
 
+
+
+
+
+
+    }
+
+    private fun redirectToLogin(isPolicyAccepted: Boolean) {
         Preference.instance.setPreferenceBoolean(
-            GlobalConstants.IS_PRIVACY_ACCEPTED, isPolicyAccepted
+            GlobalConstants.IS_PRIVACY_ACCEPTED,
+            isPolicyAccepted
         )
 
         startActivity(Intent(this, LoginActivity::class.java))

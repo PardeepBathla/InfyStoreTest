@@ -35,11 +35,13 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
         setupViewModel()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
 
         Log.d("hh", "onCreateView: ")
         binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -68,24 +70,41 @@ class HomeFragment : Fragment() {
             }
 
         } else {
+
+            binding.shimmerTiles.startShimmerAnimation()
+            binding.shimmerTiles.visibility = View.VISIBLE
+            binding.rvHome.visibility = View.GONE
+
             homeViewModel.deleteTable()
-            setupObservers()
+            homeViewModel.getProd()
+            homeViewModel.postModalLiveListView?.observe(activity as DashboardActivity, Observer {
+                if (it != null) {
+                    dataFound()
+                    val list: ArrayList<ProductModal> = ArrayList()
+                    addListToDB(list, it)
+                    retrieveList(it.categories)
+
+                }else{
+                    noDataFound()
+                }
+            })
+//            setupObservers()
         }
     }
 
     private fun dataFound() {
-        binding.tvvNoData?.visibility = View.GONE
+        binding.tvvNoData.visibility = View.GONE
         binding.rvHome.visibility = View.VISIBLE
-        binding.shimmerTiles?.stopShimmerAnimation()
-        binding.shimmerTiles?.visibility = View.GONE
+        binding.shimmerTiles.stopShimmerAnimation()
+        binding.shimmerTiles.visibility = View.GONE
 
     }
 
     private fun noDataFound() {
-        binding.tvvNoData?.visibility = View.VISIBLE
+        binding.tvvNoData.visibility = View.VISIBLE
         binding.rvHome.visibility = View.GONE
-        binding.shimmerTiles?.stopShimmerAnimation()
-        binding.shimmerTiles?.visibility = View.GONE
+        binding.shimmerTiles.stopShimmerAnimation()
+        binding.shimmerTiles.visibility = View.GONE
 
     }
 
@@ -105,9 +124,7 @@ class HomeFragment : Fragment() {
     }
 
 
-
-
-    private fun setupObservers() {
+    /*private fun setupObservers() {
         homeViewModel.getProducts().observe(activity as DashboardActivity, Observer {
             it.let { resource ->
                 when (resource.status) {
@@ -132,7 +149,7 @@ class HomeFragment : Fragment() {
                 }
             }
         })
-    }
+    }*/
 
     private fun addListToDB(list: ArrayList<ProductModal>, products: DummyProduct) {
         for (product in products.categories) {
@@ -146,7 +163,7 @@ class HomeFragment : Fragment() {
 
     private fun retrieveList(categories: List<ProductModal>) {
         myAdapter.apply {
-            addUsers(categories,homeViewModel)
+            addUsers(categories, homeViewModel)
             notifyDataSetChanged()
         }
     }

@@ -1,9 +1,17 @@
 package com.infy.infystore.ui.home
 
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.infy.infystore.DummyProduct
 import com.infy.infystore.api.ApiHelper
+import com.infy.infystore.api.ApiService
+import com.infy.infystore.api.RetrofitBuilder
 import com.infy.infystore.database.RoomAppDb
 import com.infy.infystore.database.entity.ProductEntities
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HomeRepository (private val db: RoomAppDb,private val apiHelper: ApiHelper){
     suspend fun insert(item: ProductEntities) = db.getProductDao()?.insert(item)
@@ -12,51 +20,40 @@ class HomeRepository (private val db: RoomAppDb,private val apiHelper: ApiHelper
 
     suspend fun getProductsApi() = apiHelper.getProducts()
 
-}
+
+    private var apiInterface:ApiService?=null
 
 
-/*
-private fun getProducts() {
+    init {
+        apiInterface = RetrofitBuilder.apiService
+    }
 
-    val api= Retrofit.Builder().baseUrl(Utils.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-        .create(ApiService::class.java)
+    fun getAllPosts(): LiveData<DummyProduct> {
 
-    GlobalScope.launch(Dispatchers.IO) {
-            networkCall(api)
+        val data = MutableLiveData<DummyProduct>()
 
-//        val result = async { networkCall(api)}
-//        result.await()
-//
-//        for (prod in result.await()!!) {
-//            Log.d("retrofit", prod.title)
-//        }
-//
-//
-//        val result1 = async { networkCall(api)}
-//        for (prod in result.await()!!) {
-//            Log.d("retrofit", prod.title)
-//        }
+
+        apiInterface?.getProducts()?.enqueue(object : Callback<DummyProduct> {
+            override fun onResponse(call: Call<DummyProduct>, response: Response<DummyProduct>) {
+                val res = response.body()
+                if (response.code() == 200 && res!=null){
+                    data.value = res
+
+                }else{
+                    data.value = null
+                }
+            }
+
+            override fun onFailure(call: Call<DummyProduct>, t: Throwable) {
+                data.value = null
+            }
+
+        })
+
+        return data
     }
 
 }
 
-//private suspend fun networkCall(api: MyApi): List<Category>? {
-//    var list:List<Category>? = null
-//    val products = api.getProducts()
-//    if (products.isSuccessful) {
-//        list =  products.body()?.categories
-//    }
-//    return list
-//}
 
-    private suspend fun networkCall(apiService: ApiService){
-        val products = apiService.getProducts()
-        if (products.isSuccessful) {
-            for (prod in products.body()?.categories!!) {
-                Log.d("retrofit", prod.title)
-            }
-        }
 
-    }*/

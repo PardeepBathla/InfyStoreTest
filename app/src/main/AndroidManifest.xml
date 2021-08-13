@@ -25,11 +25,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity"/>
         <activity
             android:name=".DashboardActivity"
             android:label="@string/title_activity_dashboard"
-            android:theme="@style/Theme.InfyStore.NoActionBar"></activity>
+            android:theme="@style/Theme.InfyStore.NoActionBar"/>
         <activity android:name=".PrivacyPolicyActivity" />
     </application>
 

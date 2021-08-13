@@ -147,41 +147,35 @@ class LoginActivity : AppCompatActivity() {
         Preference.instance.setPreferenceBoolean(GlobalConstants.IS_LOGIN, true)
         Preference.instance.setPreferenceBoolean(GlobalConstants.IS_REMEMBER_PASSWORD, false)
         Preference.instance.setPreferenceBoolean(GlobalConstants.IS_SOCIAL_LOGIN, true)
-        startActivity(Intent(this, PrivacyPolicyActivity::class.java))
-        finish()
-    }
-
-    private fun loginSuccess(username: String, password: String, isChecked: Boolean) {
-
-        Preference.instance.setPreferenceBoolean(GlobalConstants.IS_SOCIAL_LOGIN, false)
-        Preference.instance.setPreferenceBoolean(GlobalConstants.IS_REMEMBER_PASSWORD, isChecked)
-        Preference.instance.setPreferenceBoolean(GlobalConstants.IS_SOCIAL_LOGIN, false)
-
-        if (isChecked) {
-            Preference.instance.setPreferenceString(GlobalConstants.PASSWORD, password)
-        }
-        Preference.instance.setPreferenceString(GlobalConstants.EMAIL, username)
-        Preference.instance.setPreferenceBoolean(GlobalConstants.IS_LOGIN, true)
         if (Preference.instance.getPreferenceBoolean(GlobalConstants.IS_PRIVACY_ACCEPTED)) {
             startActivity(Intent(this, DashboardActivity::class.java))
         } else {
             startActivity(Intent(this, PrivacyPolicyActivity::class.java))
         }
+
         finish()
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (GoogleSignIn.getLastSignedInAccount(this) != null) {
-            startActivity(
-                Intent(
-                    this, DashboardActivity
-                    ::class.java
-                )
-            )
-            finish()
+    private fun loginSuccess(username: String, password: String, isChecked: Boolean) {
+
+        Preference.instance.setPreferenceBoolean(GlobalConstants.IS_LOGIN, true)
+        Preference.instance.setPreferenceBoolean(GlobalConstants.IS_SOCIAL_LOGIN, false)
+        Preference.instance.setPreferenceBoolean(GlobalConstants.IS_REMEMBER_PASSWORD, isChecked)
+        Preference.instance.setPreferenceBoolean(GlobalConstants.IS_SOCIAL_LOGIN, false)
+        if (Preference.instance.getPreferenceBoolean(GlobalConstants.IS_PRIVACY_ACCEPTED)) {
+            startActivity(Intent(this, DashboardActivity::class.java))
+        } else {
+            startActivity(Intent(this, PrivacyPolicyActivity::class.java))
         }
+        if (isChecked) {
+            Preference.instance.setPreferenceString(GlobalConstants.PASSWORD, password)
+        }
+        Preference.instance.setPreferenceString(GlobalConstants.EMAIL, username)
+
+        finish()
     }
+
+
 
 
 }
