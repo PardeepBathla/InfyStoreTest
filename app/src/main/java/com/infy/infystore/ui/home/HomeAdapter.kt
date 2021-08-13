@@ -22,18 +22,15 @@ import com.bumptech.glide.request.target.Target
 import com.infy.infystore.databinding.ItemListHomeBinding
 import com.infy.infystore.ui.home.homeModal.ProductModal
 import com.infy.infystore.utils.GlobalConstants
-import com.infy.infystore.utils.Utils
 import com.infy.infystore.utils.Utils.Companion.hideKeyboard
 
 
 class HomeAdapter(
     private val context: Context,
     private var arr: ArrayList<ProductModal>?,
-) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
+    private val  etSearch: EditText,) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
 
-companion object{
-    lateinit var etSearchh: EditText
-}
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
         val binding = ItemListHomeBinding.inflate(LayoutInflater.from(context), parent, false)
         return HomeViewHolder(binding.root, binding)
@@ -41,7 +38,7 @@ companion object{
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
 
-        holder.bindData(arr, position, context);
+        holder.bindData(arr, position, context,etSearch);
     }
 
     override fun getItemCount(): Int {
@@ -55,16 +52,20 @@ companion object{
         }
     }
 
-    fun updateList(temp: java.util.ArrayList<ProductModal>, etSearch: EditText) {
+    fun updateList(temp: java.util.ArrayList<ProductModal>) {
         arr = temp;
-        etSearchh = etSearch
         notifyDataSetChanged()
     }
 
     class HomeViewHolder(itemView: View, binding: ItemListHomeBinding) :
         RecyclerView.ViewHolder(itemView) {
         private var itemListBinding = binding
-        fun bindData(arr: List<ProductModal>?, position: Int, context: Context) {
+        fun bindData(
+            arr: List<ProductModal>?,
+            position: Int,
+            context: Context,
+            etSearch: EditText
+        ) {
             val pm: ProductModal? = arr?.get(position)
             itemListBinding.tvTitle.text = pm?.title
             itemListBinding.tvPrice.text = "$"+pm?.price
@@ -72,7 +73,7 @@ companion object{
 
             itemListBinding.root.setOnClickListener{
                 Log.d("click", "bindData: ")
-                etSearchh.text.clear()
+                etSearch.text.clear()
                 it?.let { context.hideKeyboard(it) }
                 val bundle = Bundle()
                 bundle.apply {

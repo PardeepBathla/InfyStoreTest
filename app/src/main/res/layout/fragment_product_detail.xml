@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.home.productDetail.ProductDetailFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="wrap_content"
@@ -15,8 +17,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".ui.home.productDetail.ProductDetailFragment">
+            android:layout_height="match_parent">
 
             <!-- TODO: Update blank fragment layout -->
             <androidx.constraintlayout.helper.widget.Flow
@@ -66,13 +67,29 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <Button
-        android:id="@+id/btnAddToCart"
+    <androidx.constraintlayout.helper.widget.Flow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_20sdp"
-        android:text="Add To Cart"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:flow_horizontalGap="@dimen/_30sdp"
+        app:constraint_referenced_ids="btnAddToCart,btnPurchase"/>
+
+        <Button
+            android:id="@+id/btnAddToCart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:text="@string/add_to_cart" />
+
+        <Button
+            android:id="@+id/btnPurchase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:text="Purchase" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

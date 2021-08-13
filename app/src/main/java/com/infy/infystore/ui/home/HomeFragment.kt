@@ -218,13 +218,13 @@ class HomeFragment : Fragment() {
                 }
             }
             //update recyclerview
-            myAdapter.updateList(temp,binding.etSearch)
+            myAdapter.updateList(temp)
         }
 
     }
     private fun setList() {
         rv = binding.rvHome
-        myAdapter = HomeAdapter(activity as DashboardActivity, ArrayList())
+        myAdapter = HomeAdapter(activity as DashboardActivity, ArrayList(),binding.etSearch)
         rv.layoutManager = LinearLayoutManager(activity)
         rv.adapter = myAdapter
     }

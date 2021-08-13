@@ -22,21 +22,25 @@ import com.infy.infystore.api.ApiHelper
 import com.infy.infystore.api.RetrofitBuilder
 import com.infy.infystore.database.RoomAppDb
 import com.infy.infystore.database.entity.CartEntities
+import com.infy.infystore.database.entity.OrdersEntities
 import com.infy.infystore.databinding.FragmentProductDetailBinding
 import com.infy.infystore.storage.Preference
 import com.infy.infystore.ui.Cart.CartViewModel
 import com.infy.infystore.ui.ViewModelFactory
+import com.infy.infystore.ui.orders.OrdersViewModel
 import com.infy.infystore.utils.GlobalConstants
 
 
 class ProductDetailFragment : Fragment() {
     private lateinit var cartViewModel: CartViewModel
+    private lateinit var ordersViewModel: OrdersViewModel
     private lateinit var binding: FragmentProductDetailBinding
     private lateinit var  itemCart: CartEntities
     private var name: String? = null
     private var price: String? = null
     private var image: String? = null
     private var descp: String? = null
+    private var email: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,17 +56,21 @@ class ProductDetailFragment : Fragment() {
             price = getString(GlobalConstants.PRICE)
             image = getString(GlobalConstants.IMAGE)
             descp = getString(GlobalConstants.DESCP)
+            email = Preference.instance.getPreferenceString(GlobalConstants.EMAIL)
         }
 
         setData()
 
-        itemCart = CartEntities(name!!, price!!, descp!!, image!!,
-            Preference.instance.getPreferenceString(GlobalConstants.EMAIL)!!
+        itemCart = CartEntities(name!!, price!!, descp!!, image!!, email!!
         )
 
+        clickListners()
+        return binding.root
+    }
+
+    private fun clickListners() {
         binding.btnAddToCart.setOnClickListener {
             if (binding.btnAddToCart.text.equals(getString(R.string.add_to_cart))) {
-
 
                 cartViewModel.insert(itemCart)
                 binding.btnAddToCart.text = getString(R.string.go_to_cart)
@@ -71,7 +79,13 @@ class ProductDetailFragment : Fragment() {
                 findNavController().navigate(R.id.action_productDetailFragment_to_nav_cart)
             }
         }
-        return binding.root
+
+        binding.btnPurchase?.setOnClickListener {
+
+           val ordersEntities = OrdersEntities(price!!, listOf(name!!),image!!,email!!)
+            ordersViewModel.insert(ordersEntities)
+
+        }
     }
 
 
@@ -80,6 +94,11 @@ class ProductDetailFragment : Fragment() {
             RoomAppDb.getAppDatabase(activity as DashboardActivity)?.let {
                 ViewModelFactory(ApiHelper(RetrofitBuilder.apiService), it)
             }).get(CartViewModel::class.java)
+
+        ordersViewModel = ViewModelProviders.of(this,
+            RoomAppDb.getAppDatabase(activity as DashboardActivity)?.let {
+                ViewModelFactory(ApiHelper(RetrofitBuilder.apiService), it)
+            }).get(OrdersViewModel::class.java)
     }
 
     private fun setData() {

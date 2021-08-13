@@ -8,6 +8,8 @@ import com.infy.infystore.ui.Cart.CartRepository
 import com.infy.infystore.ui.Cart.CartViewModel
 import com.infy.infystore.ui.home.HomeRepository
 import com.infy.infystore.ui.home.HomeViewModel
+import com.infy.infystore.ui.orders.OrdersRepository
+import com.infy.infystore.ui.orders.OrdersViewModel
 
 class ViewModelFactory(private val apiHelper: ApiHelper,private val roomAppDb: RoomAppDb) : ViewModelProvider.Factory {
 
@@ -18,6 +20,12 @@ class ViewModelFactory(private val apiHelper: ApiHelper,private val roomAppDb: R
         if (modelClass.isAssignableFrom(CartViewModel::class.java)) {
             return CartViewModel(CartRepository(roomAppDb),roomAppDb) as T
         }
+
+        if (modelClass.isAssignableFrom(OrdersViewModel::class.java)) {
+            return OrdersViewModel(OrdersRepository(roomAppDb),roomAppDb) as T
+        }
+
+
         throw IllegalArgumentException("Unknown class name")
     }
 
