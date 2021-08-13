@@ -8,7 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.Navigation
+import android.widget.EditText
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,11 +19,11 @@ import com.bumptech.glide.request.RequestListener
 import com.infy.infystore.R
 
 import com.bumptech.glide.request.target.Target
-import com.infy.infystore.databinding.FragmentCartBinding
 import com.infy.infystore.databinding.ItemListHomeBinding
-import com.infy.infystore.ui.Cart.CartFragment
 import com.infy.infystore.ui.home.homeModal.ProductModal
 import com.infy.infystore.utils.GlobalConstants
+import com.infy.infystore.utils.Utils
+import com.infy.infystore.utils.Utils.Companion.hideKeyboard
 
 
 class HomeAdapter(
@@ -30,7 +31,9 @@ class HomeAdapter(
     private var arr: ArrayList<ProductModal>?,
 ) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
 
-
+companion object{
+    lateinit var etSearchh: EditText
+}
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
         val binding = ItemListHomeBinding.inflate(LayoutInflater.from(context), parent, false)
         return HomeViewHolder(binding.root, binding)
@@ -45,11 +48,17 @@ class HomeAdapter(
         return arr?.size ?: 0
     }
 
-    fun addUsers(users: List<ProductModal>, homeViewModel1: HomeViewModel) {
+    fun addUsers(users: List<ProductModal>) {
         this.arr?.apply {
             clear()
             addAll(users)
         }
+    }
+
+    fun updateList(temp: java.util.ArrayList<ProductModal>, etSearch: EditText) {
+        arr = temp;
+        etSearchh = etSearch
+        notifyDataSetChanged()
     }
 
     class HomeViewHolder(itemView: View, binding: ItemListHomeBinding) :
@@ -63,6 +72,8 @@ class HomeAdapter(
 
             itemListBinding.root.setOnClickListener{
                 Log.d("click", "bindData: ")
+                etSearchh.text.clear()
+                it?.let { context.hideKeyboard(it) }
                 val bundle = Bundle()
                 bundle.apply {
                     this.putString(GlobalConstants.TITLE, pm?.title)
@@ -109,6 +120,11 @@ class HomeAdapter(
                 .into(itemListBinding.ivProduct)
         }
 
+    }
+
+
+    fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
     }
 
 }

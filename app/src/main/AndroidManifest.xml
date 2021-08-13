@@ -29,6 +29,7 @@
         <activity
             android:name=".DashboardActivity"
             android:label="@string/title_activity_dashboard"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/Theme.InfyStore.NoActionBar"/>
         <activity android:name=".PrivacyPolicyActivity" />
     </application>

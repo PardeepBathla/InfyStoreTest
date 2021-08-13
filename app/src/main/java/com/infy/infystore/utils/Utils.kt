@@ -1,5 +1,6 @@
 package com.infy.infystore.utils
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Service
 import android.content.Context
@@ -10,6 +11,8 @@ import android.net.NetworkInfo
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.infy.infystore.R
 
 
@@ -67,6 +70,11 @@ class Utils {
             badge.setCount(count)
             icon.mutate()
             icon.setDrawableByLayerId(R.id.ic_group_count, badge)
+        }
+
+        fun Context.hideKeyboard(view: View) {
+            val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
 }

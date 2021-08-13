@@ -1,6 +1,8 @@
 package com.infy.infystore.ui.home
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -21,7 +23,7 @@ import com.infy.infystore.database.entity.ProductEntities
 import com.infy.infystore.databinding.FragmentHomeBinding
 import com.infy.infystore.ui.ViewModelFactory
 import com.infy.infystore.ui.home.homeModal.ProductModal
-import com.infy.infystore.utils.Status.*
+
 
 class HomeFragment : Fragment() {
 
@@ -29,6 +31,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var rv: RecyclerView
     private lateinit var myAdapter: HomeAdapter
+    private lateinit var  list: ArrayList<ProductModal>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,25 +74,30 @@ class HomeFragment : Fragment() {
 
         } else {
 
-            binding.shimmerTiles.startShimmerAnimation()
-            binding.shimmerTiles.visibility = View.VISIBLE
-            binding.rvHome.visibility = View.GONE
+            loader()
 
             homeViewModel.deleteTable()
             homeViewModel.getProd()
             homeViewModel.postModalLiveListView?.observe(activity as DashboardActivity, Observer {
                 if (it != null) {
                     dataFound()
-                    val list: ArrayList<ProductModal> = ArrayList()
+
+                    list = ArrayList()
                     addListToDB(list, it)
                     retrieveList(it.categories)
 
-                }else{
+                } else {
                     noDataFound()
                 }
             })
 //            setupObservers()
         }
+    }
+
+    private fun loader() {
+        binding.shimmerTiles.startShimmerAnimation()
+        binding.shimmerTiles.visibility = View.VISIBLE
+        binding.rvHome.visibility = View.GONE
     }
 
     private fun dataFound() {
@@ -163,7 +171,7 @@ class HomeFragment : Fragment() {
 
     private fun retrieveList(categories: List<ProductModal>) {
         myAdapter.apply {
-            addUsers(categories, homeViewModel)
+            addUsers(categories)
             notifyDataSetChanged()
         }
     }
@@ -175,8 +183,45 @@ class HomeFragment : Fragment() {
             binding.swipeToRefresh?.isRefreshing = false
 
         }
+
+
+        binding.etSearch?.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+                // TODO Auto-generated method stub
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
+                // TODO Auto-generated method stub
+            }
+
+            override fun afterTextChanged(s: Editable) {
+
+                // filter your list from your input
+
+                filter(s.toString())
+                //you can use runnable postDelayed like 500 ms to delay search text
+            }
+        })
     }
 
+
+    fun filter(text: String?) {
+        text?.let {
+            val temp: ArrayList<ProductModal> = ArrayList()
+            for (d in list) {
+                //or use .equal(text) with you want equal match
+                //use .toLowerCase() for better matches
+                if (d.title.toLowerCase().contains(it.toLowerCase())) {
+                    temp.add(d)
+                }
+            }
+            //update recyclerview
+            myAdapter.updateList(temp,binding.etSearch)
+        }
+
+    }
     private fun setList() {
         rv = binding.rvHome
         myAdapter = HomeAdapter(activity as DashboardActivity, ArrayList())

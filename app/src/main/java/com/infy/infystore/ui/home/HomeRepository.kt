@@ -28,10 +28,9 @@ class HomeRepository (private val db: RoomAppDb,private val apiHelper: ApiHelper
         apiInterface = RetrofitBuilder.apiService
     }
 
-    fun getAllPosts(): LiveData<DummyProduct> {
+    fun getAllProducts(): LiveData<DummyProduct> {
 
         val data = MutableLiveData<DummyProduct>()
-
 
         apiInterface?.getProducts()?.enqueue(object : Callback<DummyProduct> {
             override fun onResponse(call: Call<DummyProduct>, response: Response<DummyProduct>) {

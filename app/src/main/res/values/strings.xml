@@ -30,4 +30,5 @@
     <string name="update">Update</string>
     <string name="welcome">Welcome</string>
     <string name="enter_name">Enter Name</string>
+    <string name="search_prod">Search Products</string>
 </resources>
