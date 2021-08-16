@@ -15,14 +15,19 @@ import com.infy.infystore.api.ApiHelper
 import com.infy.infystore.api.RetrofitBuilder
 import com.infy.infystore.database.RoomAppDb
 import com.infy.infystore.database.entity.CartEntities
+import com.infy.infystore.database.entity.OrdersEntities
 import com.infy.infystore.databinding.FragmentCartBinding
+import com.infy.infystore.storage.Preference
 import com.infy.infystore.ui.ViewModelFactory
+import com.infy.infystore.ui.orders.OrdersViewModel
+import com.infy.infystore.utils.GlobalConstants
 import com.infy.infystore.utils.Utils
 
 
 class CartFragment : Fragment() {
 
     private lateinit var cartViewModel: CartViewModel
+    private lateinit var ordersViewModel: OrdersViewModel
     private lateinit var binding: FragmentCartBinding
     private lateinit var rv: RecyclerView
     private lateinit var myAdapter: CartAdapter
@@ -43,8 +48,8 @@ class CartFragment : Fragment() {
         binding = FragmentCartBinding.inflate(inflater, container, false)
 
         setupViewModel()
-        binding.shimmerTiles?.startShimmerAnimation()
-        binding.shimmerTiles?.visibility = View.VISIBLE
+        binding.shimmerTiles.startShimmerAnimation()
+        binding.shimmerTiles.visibility = View.VISIBLE
         init()
 
 
@@ -56,10 +61,24 @@ class CartFragment : Fragment() {
 
     private fun clickListners() {
         binding.btnGoToPurchase.setOnClickListener {
+            val list = myAdapter.getList()
+            var namesList: ArrayList<String> = ArrayList()
+
+            for (name in list!!) {
+                namesList.add(name.itemName)
+            }
+            val ordersEntities = OrdersEntities(
+                (list.size * 45).toString(), namesList, list[0].itemImage,
+                Preference.instance.getPreferenceString(GlobalConstants.EMAIL)!!
+            )
+            ordersViewModel.insert(ordersEntities)
+
             cartViewModel.deleteCart()
-            init()
+
             findNavController().navigate(R.id.action_cartFragment_to_purchaseFragment)
         }
+
+
     }
 
     private fun init() {
@@ -97,6 +116,11 @@ class CartFragment : Fragment() {
             RoomAppDb.getAppDatabase(activity as DashboardActivity)?.let {
                 ViewModelFactory(ApiHelper(RetrofitBuilder.apiService), it)
             }).get(CartViewModel::class.java)
+
+        ordersViewModel = ViewModelProviders.of(this,
+            RoomAppDb.getAppDatabase(activity as DashboardActivity)?.let {
+                ViewModelFactory(ApiHelper(RetrofitBuilder.apiService), it)
+            }).get(OrdersViewModel::class.java)
     }
 
 

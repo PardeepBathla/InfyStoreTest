@@ -40,6 +40,10 @@ class CartAdapter(
         return arr?.size?:0
     }
 
+    fun getList() : ArrayList<CartEntities>? {
+        return arr
+    }
+
 
     public class CartViewHolder(
         itemView: View,
@@ -57,6 +61,7 @@ class CartAdapter(
 
             val pm: CartEntities? = arr?.get(position)
             itemListBinding.tvTitle.text = arr?.get(position)?.itemName
+            Log.d("ordersBindData",arr?.get(position)?.itemName.toString())
             itemListBinding.tvPrice.text = "$"+pm?.itemPrice
 
             itemListBinding.ivDelete.setOnClickListener{

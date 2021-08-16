@@ -85,6 +85,8 @@ class ProductDetailFragment : Fragment() {
            val ordersEntities = OrdersEntities(price!!, listOf(name!!),image!!,email!!)
             ordersViewModel.insert(ordersEntities)
 
+            findNavController().navigate(R.id.action_productDetailFragment_to_purchaseFragment)
+
         }
     }
 

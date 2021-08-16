@@ -41,6 +41,8 @@ class OrdersAdapter(
     }
 
 
+
+
     public class OrdersViewHolder(
         itemView: View,
         binding: ItemOrderBinding,
@@ -56,9 +58,9 @@ class OrdersAdapter(
         ) {
 
             val pm: OrdersEntities? = arr?.get(position)
-            itemListBinding.tvProductnames.text = arr?.get(position)?.productsName?.get(0)
-            itemListBinding.tvProductnames.text = arr?.joinToString (separator = "," )
-            itemListBinding.tvPrice.text = "$" + pm?.productsName
+//            itemListBinding.tvProductnames.text = arr?.joinToString (separator = "," )
+            itemListBinding.tvProductnames.text = pm?.productsName?.joinToString { it -> "$it"}
+            itemListBinding.tvPrice.text = "$" + pm?.productPrice
 
 
             Glide.with(context)

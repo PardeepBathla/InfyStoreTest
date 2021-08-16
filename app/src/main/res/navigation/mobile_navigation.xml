@@ -59,6 +59,12 @@
             app:destination="@id/nav_cart"
             app:popUpToInclusive="true"
             app:popUpTo="@id/productDetailFragment"/>
+        <action
+            android:id="@+id/action_productDetailFragment_to_purchaseFragment"
+            app:destination="@id/purchaseFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/productDetailFragment"/>
+
     </fragment>
     <fragment
         android:id="@+id/purchaseFragment"

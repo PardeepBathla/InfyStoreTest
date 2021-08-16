@@ -28,6 +28,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="Go to Home"/>
+        android:text="@string/continue_shopping"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

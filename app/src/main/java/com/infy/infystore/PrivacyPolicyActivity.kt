@@ -31,6 +31,7 @@ class PrivacyPolicyActivity : AppCompatActivity() {
             radioButton = findViewById(intSelectButton)
             Log.d("radio",""+intSelectButton)
 
+
             if (radioButton.text.equals(getString(R.string.accept))) {
                 Preference.instance.setPreferenceBoolean(GlobalConstants.IS_PRIVACY_ACCEPTED,true)
                 startActivity(Intent(this,DashboardActivity::class.java))
